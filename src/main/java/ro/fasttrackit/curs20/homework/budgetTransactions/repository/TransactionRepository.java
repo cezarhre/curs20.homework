@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Integer> {
     List<Transaction> findByType(TransactionType type);
-    List<Transaction> findByMinAmount(double minAmount);
-    List<Transaction> findByMaxAmount(double maxAmount);
-    List<Transaction> findByTypeMinAmount(TransactionType type, double minAmount);
-    List<Transaction> findByTypeMaxAmount(TransactionType type, double maxAmount);
+    List<Transaction> findByAmountGreaterThan(double minAmount);
+    List<Transaction> findByAmountLessThan(double maxAmount);
+    List<Transaction> findByTypeAndAmountGreaterThan(TransactionType type, double minAmount);
+    List<Transaction> findByTypeAndAmountLessThan(TransactionType type, double maxAmount);
     List<Transaction> findByAmountBetween(double minAmount, double maxAmount);
-    List<Transaction> findByTypeMinAmountMaxAmount(TransactionType type, double minAmount, double maxAmount);
+    List<Transaction> findByTypeAndAmountBetween(TransactionType type, double minAmount, double maxAmount);
 }

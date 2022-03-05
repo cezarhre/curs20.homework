@@ -22,17 +22,17 @@ public class TransactionService {
         if (type != null) {
             return repository.findByType(type);
         } else if (maxAmount != 0) {
-            return repository.findByMaxAmount(maxAmount);
+            return repository.findByAmountLessThan(maxAmount);
         } else if (minAmount != 0) {
-            return repository.findByMinAmount(minAmount);
+            return repository.findByAmountGreaterThan(minAmount);
         } else if (minAmount != 0 && maxAmount != 0) {
             return repository.findByAmountBetween(minAmount, maxAmount);
         } else if (type != null && maxAmount != 0) {
-            return repository.findByTypeMaxAmount(type, maxAmount);
+            return repository.findByTypeAndAmountLessThan(type, maxAmount);
         } else if (type != null && minAmount != 0) {
-            return repository.findByTypeMinAmount(type, minAmount);
+            return repository.findByTypeAndAmountGreaterThan(type, minAmount);
         } else if (type != null && minAmount != 0 && maxAmount != 0) {
-            return repository.findByTypeMinAmountMaxAmount(type, minAmount, maxAmount);
+            return repository.findByTypeAndAmountBetween(type, minAmount, maxAmount);
         } else {
             return repository.findAll();
         }
