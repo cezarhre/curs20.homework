@@ -13,26 +13,28 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
+
     private final TransactionRepository repository;
 
     public TransactionService(TransactionRepository repository) {
         this.repository = repository;
     }
+
     public List<Transaction> filterAll(TransactionType type, double minAmount, double maxAmount) {
-        if (type != null) {
-            return repository.findByType(type);
+        if (type != null & minAmount != 0 & maxAmount != 0) {
+            return repository.findByTypeAndAmountBetween(type, minAmount, maxAmount);
+        } else if (minAmount != 0 & maxAmount != 0) {
+            return repository.findByAmountBetween(minAmount, maxAmount);
+        } else if (type != null & maxAmount != 0) {
+            return repository.findByTypeAndAmountLessThan(type, maxAmount);
+        } else if (type != null & minAmount != 0) {
+            return repository.findByTypeAndAmountGreaterThan(type, minAmount);
         } else if (maxAmount != 0) {
             return repository.findByAmountLessThan(maxAmount);
         } else if (minAmount != 0) {
             return repository.findByAmountGreaterThan(minAmount);
-        } else if (minAmount != 0 && maxAmount != 0) {
-            return repository.findByAmountBetween(minAmount, maxAmount);
-        } else if (type != null && maxAmount != 0) {
-            return repository.findByTypeAndAmountLessThan(type, maxAmount);
-        } else if (type != null && minAmount != 0) {
-            return repository.findByTypeAndAmountGreaterThan(type, minAmount);
-        } else if (type != null && minAmount != 0 && maxAmount != 0) {
-            return repository.findByTypeAndAmountBetween(type, minAmount, maxAmount);
+        } else if (type != null) {
+            return repository.findByType(type);
         } else {
             return repository.findAll();
         }
@@ -62,15 +64,13 @@ public class TransactionService {
         return prod;
     }
 
-    public Map<TransactionType, Double> sumByType(TransactionType sumType) {
+    public Map<TransactionType, List<Transaction>> orderByType() {
         return repository.findAll().stream()
-                .filter(trans -> trans.getType() == null || trans.getType().equals(sumType))
-                .collect(Collectors.groupingBy(Transaction::getType, Collectors.summingDouble(Transaction::getAmount)));
+                .collect(Collectors.groupingBy(Transaction::getType));
     }
 
-    public Map<String, Double> sumByProduct(String sumProd) {
+    public Map<String, List<Transaction>> orderByProduct() {
         return repository.findAll().stream()
-                .filter(trans -> trans.getProduct().equalsIgnoreCase(sumProd))
-                .collect(Collectors.groupingBy(Transaction::getProduct, Collectors.summingDouble(Transaction::getAmount)));
+                .collect(Collectors.groupingBy(Transaction::getProduct));
     }
 }

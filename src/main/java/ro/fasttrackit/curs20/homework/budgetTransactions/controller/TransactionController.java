@@ -33,14 +33,14 @@ public class TransactionController {
         return service.byId(id);
     }
 
-    @GetMapping(value = "/reports",params = "sumType")
-    Map<TransactionType, Double> sumByType(@RequestParam TransactionType sumType){
-        return service.sumByType(sumType);
+    @GetMapping(value = "/reports",params = "type")
+    Map<TransactionType, List<Transaction>> orderByType(){
+        return service.orderByType();
     }
 
-    @GetMapping(value = "/reports",params = "sumProd")
-    Map<String, Double> sumByProduct(@RequestParam String sumProd){
-        return service.sumByProduct(sumProd);
+    @GetMapping(value = "/reports",params = "prod")
+    Map<String, List<Transaction>> sumByProduct(){
+        return service.orderByProduct();
     }
 
     @PostMapping
